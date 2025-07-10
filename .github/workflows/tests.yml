@@ -41,7 +41,7 @@ jobs:
           unzip -q allure.zip -d allure-commandline
           allure-commandline/allure-2.27.0/bin/allure generate allure-results -o allure-report --clean
 
-      - name: 📎 Upload Allure report artifact
+      - name: 🐍📎 Upload Allure report artifact
         uses: actions/upload-artifact@v3
         with:
           name: allure-report
