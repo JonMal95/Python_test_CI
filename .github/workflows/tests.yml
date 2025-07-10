@@ -39,7 +39,7 @@ jobs:
           allure-commandline/allure-2.27.0/bin/allure generate allure-results -o allure-report --clean
 
       - name: 📎 Upload Allure report artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: allure-report
