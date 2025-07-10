@@ -18,7 +18,6 @@ jobs:
 
       - name: 📦 Install dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: 🔽 Install Chrome
@@ -26,22 +25,20 @@ jobs:
         with:
           chrome-version: stable
 
-      - name: 🧪 Run tests with Allure
+      - name: 🧪 Run tests
         run: |
           pytest --alluredir=allure-results
 
       - name: 📂 Generate Allure report
         run: |
-    mkdir -p allure-report
-    pip install allure-pytest
+          mkdir -p allure-report
+          pip install allure-pytest
+          curl -sLo allure.tgz https://github.com/allure-framework/allure2/releases/latest/download/allure-2.27.0.tgz
+          tar -xzf allure.tgz
+          mv allure-2.27.0 allure-commandline
+          ./allure-commandline/bin/allure generate allure-results -o allure-report --clean
 
-    curl -sLo allure.tgz https://github.com/allure-framework/allure2/releases/latest/download/allure-2.27.0.tgz
-    tar -xzf allure.tgz
-    mv allure-2.27.0 allure-commandline
-
-    ./allure-commandline/bin/allure generate allure-results -o allure-report --clean
-
-      - name: 📎 Upload Allure report artifact
+      - name: 📎 Upload Allure report
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
