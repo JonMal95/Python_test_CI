@@ -32,11 +32,14 @@ jobs:
 
       - name: 📂 Generate Allure report
         run: |
-          mkdir -p allure-report
-          pip install allure-pytest
-          curl -o allure.zip -L https://github.com/allure-framework/allure2/releases/latest/download/allure-2.27.0.zip
-          unzip -q allure.zip -d allure-commandline
-          allure-commandline/allure-2.27.0/bin/allure generate allure-results -o allure-report --clean
+    mkdir -p allure-report
+    pip install allure-pytest
+
+    curl -sLo allure.tgz https://github.com/allure-framework/allure2/releases/latest/download/allure-2.27.0.tgz
+    tar -xzf allure.tgz
+    mv allure-2.27.0 allure-commandline
+
+    ./allure-commandline/bin/allure generate allure-results -o allure-report --clean
 
       - name: 📎 Upload Allure report artifact
         uses: actions/upload-artifact@v4
