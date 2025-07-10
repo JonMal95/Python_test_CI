@@ -29,11 +29,17 @@ jobs:
         run: |
           pytest --alluredir=allure-results
 
-- name: 📂 Generate Allure report
-  run: |
-    mkdir -p allure-report
-    pip install allure-pytest
-    curl -sLo allure.tgz https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
-    tar -xzf allure.tgz
-    mv allure-2.27.0 allure-commandline
-    ./allure-commandline/bin/allure generate allure-results -o allure-report --clean
+      - name: 📂 Generate Allure report
+        run: |
+          mkdir -p allure-report
+          pip install allure-pytest
+          curl -sLo allure.tgz https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
+          tar -xzf allure.tgz
+          mv allure-2.27.0 allure-commandline
+          ./allure-commandline/bin/allure generate allure-results -o allure-report --clean
+
+      - name: 📎 Upload Allure report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
