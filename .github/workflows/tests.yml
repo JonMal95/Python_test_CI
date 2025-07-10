@@ -29,5 +29,20 @@ jobs:
         with:
           chrome-version: stable
 
-      - name: 🧪 Run tests
-        run: pytest --disable-warnings --maxfail=3
+      - name: 🧪 Run tests with Allure
+        run: |
+          pytest --alluredir=allure-results
+
+      - name: 📂 Generate Allure report
+        run: |
+          mkdir -p allure-report
+          pip install allure-pytest
+          curl -o allure.zip -L https://github.com/allure-framework/allure2/releases/latest/download/allure-2.27.0.zip
+          unzip -q allure.zip -d allure-commandline
+          allure-commandline/allure-2.27.0/bin/allure generate allure-results -o allure-report --clean
+
+      - name: 📎 Upload Allure report artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-report
+          path: allure-report
