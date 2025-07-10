@@ -34,7 +34,7 @@ jobs:
           pytest --alluredir=allure-results
 
       - name: 📂 Generate Allure report
-        run: |
+        run: | 
           mkdir -p allure-report
           pip install allure-pytest
           curl -o allure.zip -L https://github.com/allure-framework/allure2/releases/latest/download/allure-2.27.0.zip
