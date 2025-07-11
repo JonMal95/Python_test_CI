@@ -5,6 +5,7 @@
     <title>Allure Report</title>
     <link rel="icon" href="favicon.ico">
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="plugin/screen-diff/styles.css">
 </head>
 <body>
     <div id="alert"></div>
@@ -15,13 +16,17 @@
     </div>
     <div id="popup"></div>
     <script src="app.js"></script>
+    <script src="plugin/behaviors/index.js"></script>
+    <script src="plugin/packages/index.js"></script>
+    <script src="plugin/screen-diff/index.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FVWC4GKEYS"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-FVWC4GKEYS', {
-          'allureVersion': '2.33-SNAPSHOT',
-          'reportUuid': '14270dff-a9d1-4c07-8787-e1a7c3bd596f',
+          'allureVersion': 'dev',
+          'reportUuid': '476c499c-ddc9-4d2b-b8ee-e4a66e50232b',
           'single_file': false
         });
     </script>
