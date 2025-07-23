@@ -28,4 +28,5 @@ def test_checkout_process(browser):
 
     # 6. Проверка
     message = checkout_page.get_confirmation_message()
-    assert "THANK YOU FOR YOUR ORDER" in message
+    assert "Thank you for your order!" in message
+
