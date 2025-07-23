@@ -43,3 +43,24 @@ jobs:
         with:
           name: allure-report
           path: allure-report
+      - name: 📤 Send Allure report to Telegram
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GITHUB_JOB_STATUS: ${{ job.status }}   # <== вот тут
+        run: |
+          STATUS="✅ UI-тесты прошли успешно ✔️"
+          COLOR="🟢"
+          if [[ "$GITHUB_JOB_STATUS" != "success" ]]; then
+            STATUS="❌ UI-тесты упали 😢"
+            COLOR="🔴"
+          fi
+
+          ZIP_NAME="allure-report.zip"
+          zip -r "$ZIP_NAME" allure-report
+
+          curl -F chat_id="$TELEGRAM_CHAT_ID" \
+               -F document=@"$ZIP_NAME" \
+               -F caption="$COLOR $STATUS%0A🔗 https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+               https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument
