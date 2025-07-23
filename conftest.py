@@ -1,7 +1,10 @@
+import os
+os.environ["WDM_SSL_VERIFY"] = "0"
 import pytest
 import os
 import tempfile
 import shutil
+import allure  # 🔄 добавляем это!
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -24,23 +27,28 @@ def browser(request):
 
     yield driver
 
-    # Сделать скриншот при падении теста
+    # 📸 Скриншот при падении + вложение в Allure
     if request.node.rep_call.failed:
         screenshot_dir = "screenshots"
         os.makedirs(screenshot_dir, exist_ok=True)
         file_name = f"{request.node.nodeid.replace('::', '_')}.png"
         screenshot_path = os.path.join(screenshot_dir, file_name)
         driver.save_screenshot(screenshot_path)
+
+        with open(screenshot_path, "rb") as image_file:
+            allure.attach(
+                image_file.read(),
+                name="Скриншот при падении",
+                attachment_type=allure.attachment_type.PNG
+            )
+
         print(f"\n📸 Скриншот сохранён: {screenshot_path}")
 
     driver.quit()
-
-    # 🧹 Удаляем временный профиль
     shutil.rmtree(profile_dir, ignore_errors=True)
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    # Для определения упал ли тест
     outcome = yield
     rep = outcome.get_result()
     setattr(item, "rep_" + rep.when, rep)
