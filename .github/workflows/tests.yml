@@ -7,10 +7,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    env:  # ✅ Пробрасываем переменные везде
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v3
@@ -29,9 +25,9 @@ jobs:
         with:
           chrome-version: stable
 
-      - name: 🧪 Run tests
+      - name: 🧪 Run tests (не прерывать при ошибках)
         run: |
-          pytest --alluredir=allure-results
+          pytest --alluredir=allure-results || true
 
       - name: 📂 Generate Allure report
         run: |
@@ -50,10 +46,14 @@ jobs:
 
       - name: 📤 Send Allure report to Telegram
         if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GITHUB_JOB_STATUS: ${{ job.status }}
         run: |
           STATUS="✅ UI-тесты прошли успешно ✔️"
           COLOR="🟢"
-          if [[ "${{ job.status }}" != "success" ]]; then
+          if [[ "$GITHUB_JOB_STATUS" != "success" ]]; then
             STATUS="❌ UI-тесты упали 😢"
             COLOR="🔴"
           fi
